@@ -87,3 +87,9 @@ Exercises/BigInt_in_progress/Debug/vcpkg.applocal.log
 *.pdb
 *.tlog
 *.log
+*.vcxproj
+*.filters
+*.vcxproj
+*.ipch
+*.opendb
+*.sqlite
