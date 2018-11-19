@@ -8,7 +8,9 @@ using namespace std;
 
 class BigInt {
 	string stringRepresentation;
-	pair<int, int> addDecimalPlace(int i, BigInt j);
+	int carryValue;
+	bool isNegative;
+	int addDigit(vector<int>::reverse_iterator it, BigInt j);
 public:
 	BigInt();
 	BigInt(string stringRepresentation);

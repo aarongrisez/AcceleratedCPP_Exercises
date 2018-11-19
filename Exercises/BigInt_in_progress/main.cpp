@@ -7,11 +7,12 @@
 using namespace std;
 
 int main() {
-	string x;
+	char x[12];
 	cout << numeric_limits<long long int>::max() << endl;
 	cout << "Enter a numeric string" << endl;
-	cin >> x;
+	cin.getline(x, 12);
 	BigInt* largeInteger = new BigInt(x);
-	largeInteger = largeInteger + 1;
-	cin >> x;
+	BigInt* largeInteger2 = new BigInt(x);
+	*largeInteger += *largeInteger2;
+	return 0;
 }

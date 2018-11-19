@@ -93,3 +93,7 @@ Exercises/BigInt_in_progress/Debug/vcpkg.applocal.log
 *.ipch
 *.opendb
 *.sqlite
+*.vcxproj
+Exercises/BigInt_in_progress/BigInt.vcxproj
+*.vcxproj
+Exercises/BigInt_in_progress/BigInt.vcxproj
