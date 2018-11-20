@@ -32,28 +32,37 @@ BigInt::BigInt(string stringRepresentation) {
 	this->carryValue = 0;
 }
 
+void BigInt::addDigit(int d1, int d2, vector<int>& tempSum) {
+	int temp = d1 + d2;
+	if (temp >= 10) {
+		// Handle carry overflow
+	}
+	tempSum.push_back(temp);
+}
+
 BigInt& BigInt::operator+= (BigInt* rhs) { 
 	cout << "Adding" << endl;
+	vector<int> temp;
 	vector<int>::reverse_iterator rhsMarker = rhs->integerVector.rbegin();
 	for (vector<int>::reverse_iterator it = this->integerVector.rbegin(); it != this->integerVector.rend(); ++it) {
 		// Iterate backwards through the vector
 
 		// Case 1: Same size
 		if (rhsMarker != rhs->integerVector.rend()) {
-			cout << "rhs " << *rhsMarker << endl;
-			cout << "lhs " << *it << endl;
+			addDigit(*rhsMarker, *it, temp);
 			++rhsMarker;
 		}
 		// Case 2: Second int shorter (i.e.: lhs has more digits)
 		else if (rhsMarker == rhs->integerVector.rend()) {
-			cout << "case 2, lhs " << *it << endl;
+			addDigit(*it, 0, temp);
 		}
 	}
 	// Case 3: Second int string longer (i.e.: rhs has more digits)
 	while (rhsMarker != rhs->integerVector.rend()) {
-		cout << "case 3, lhs " << *rhsMarker << endl;
+		addDigit(*rhsMarker, 0, temp);
 		++rhsMarker;
 	}
+	this->integerVector = temp;
 	return *this;
 }
 
