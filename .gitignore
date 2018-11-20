@@ -97,3 +97,6 @@ Exercises/BigInt_in_progress/Debug/vcpkg.applocal.log
 Exercises/BigInt_in_progress/BigInt.vcxproj
 *.vcxproj
 Exercises/BigInt_in_progress/BigInt.vcxproj
+*.db-shm
+*.db-wal
+*.json

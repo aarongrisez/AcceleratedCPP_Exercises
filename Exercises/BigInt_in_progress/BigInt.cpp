@@ -32,30 +32,39 @@ BigInt::BigInt(string stringRepresentation) {
 	this->carryValue = 0;
 }
 
-int BigInt::addDigit(vector<int>::reverse_iterator it, BigInt rhs) {
-	// i is the INDEX of the digit, with the end of the vector being the rightmost place
-	cout << *it << endl;
-	cout << rhs.stringRepresentation << endl;
-	return 0;
-}
-
-BigInt& BigInt::operator+= (const BigInt& rhs) {
+BigInt& BigInt::operator+= (BigInt* rhs) { 
 	cout << "Adding" << endl;
+	vector<int>::reverse_iterator rhsMarker = rhs->integerVector.rbegin();
 	for (vector<int>::reverse_iterator it = this->integerVector.rbegin(); it != this->integerVector.rend(); ++it) {
 		// Iterate backwards through the vector
-		this->addDigit(it, rhs);
+
+		// Case 1: Same size
+		if (rhsMarker != rhs->integerVector.rend()) {
+			cout << "rhs " << *rhsMarker << endl;
+			cout << "lhs " << *it << endl;
+			++rhsMarker;
+		}
+		// Case 2: Second int shorter (i.e.: lhs has more digits)
+		else if (rhsMarker == rhs->integerVector.rend()) {
+			cout << "case 2, lhs " << *it << endl;
+		}
+	}
+	// Case 3: Second int string longer (i.e.: rhs has more digits)
+	while (rhsMarker != rhs->integerVector.rend()) {
+		cout << "case 3, lhs " << *rhsMarker << endl;
+		++rhsMarker;
 	}
 	return *this;
 }
 
-BigInt& BigInt::operator-= (const BigInt& rhs) {
+BigInt& BigInt::operator-= (const BigInt* rhs) {
 	return *this;
 }
 
-BigInt& BigInt::operator*= (const BigInt& rhs) {
+BigInt& BigInt::operator*= (const BigInt* rhs) {
 	return *this;
 }
 
-BigInt& BigInt::operator/= (const BigInt& rhs) {
+BigInt& BigInt::operator/= (const BigInt* rhs) {
 	return *this;
 }
