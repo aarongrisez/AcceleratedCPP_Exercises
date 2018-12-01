@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -18,26 +19,25 @@ BigInt::BigInt(string stringRepresentation) {
 	this->stringRepresentation = stringRepresentation;
 	string::const_iterator negative = find(stringRepresentation.begin(), stringRepresentation.end(), '-');
 	if (negative == stringRepresentation.end()) {
-		cout << "Not Negative" << endl;
 		this->isNegative = false;
 	}
 	else {
 		this->isNegative = true;
 	}
-	string::const_iterator decimal = find(stringRepresentation.begin(), stringRepresentation.end(), '.');
 	for (int i = 0; i < stringRepresentation.size(); i++) {
-		cout << (int)stringRepresentation[i] - 48 << endl;
 		this->integerVector.push_back((int)stringRepresentation[i] - 48);
 	}
 	this->carryValue = 0;
 }
 
 void BigInt::addDigit(int d1, int d2, vector<int>& tempSum) {
-	int temp = d1 + d2;
+	int temp = d1 + d2 + this->carryValue;
 	if (temp >= 10) {
 		// Handle carry overflow
+		this->carryValue = temp / 10;
+		temp = temp % 10;
 	}
-	tempSum.push_back(temp);
+	tempSum.insert(tempSum.begin(), temp);
 }
 
 BigInt& BigInt::operator+= (BigInt* rhs) { 
@@ -63,6 +63,15 @@ BigInt& BigInt::operator+= (BigInt* rhs) {
 		++rhsMarker;
 	}
 	this->integerVector = temp;
+	do {
+		if (this->carryValue > 10) {
+			this->integerVector.insert(this->integerVector.begin(), this->carryValue % 10);
+		}
+		else {
+			this->integerVector.insert(this->integerVector.begin(), this->carryValue);
+		}
+		this->carryValue = this->carryValue / 10;
+	} while (this->carryValue > 0);
 	return *this;
 }
 
@@ -76,4 +85,16 @@ BigInt& BigInt::operator*= (const BigInt* rhs) {
 
 BigInt& BigInt::operator/= (const BigInt* rhs) {
 	return *this;
+}
+
+long long int BigInt::integerRepresentation() {
+	long long int temp = 0;
+	for (int i = 0; i < this->integerVector.size(); i++) {
+		temp += this->integerVector[i] * pow(10, this->integerVector.size() - i - 1);
+	}
+	return temp;
+}
+
+void BigInt::testAddition() {
+
 }
