@@ -2,6 +2,13 @@
 
 A C++ implementation of the game Minesweeper
 
+## Installation
+
+This code has been tested and run with `g++` on Ubuntu 18.04.1. The following `g++` command will compile the application:
+
+```bash
+g++ Board.cpp BoardSpace.cpp main.cpp
+```
 
 Classes:
 - Board
@@ -14,7 +21,6 @@ Classes:
 
 Setup: (runs once)
 - Create Board
-	3 inputs: board length, board width, and number of mines
 
 MainLoop:
 - Display Board
