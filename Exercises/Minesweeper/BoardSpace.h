@@ -15,6 +15,7 @@ class BoardSpace {
 				void setNumAdjacentMines(int mines);
                 char getDisplayChar();
                 void setDisplayChar(char c);
+                void updateDisplayChar();
                 bool checkIfMine();
 
 };

@@ -42,3 +42,13 @@ void BoardSpace::setDisplayChar(char c) {
 bool BoardSpace::checkIfMine() {
     return this->isMine;
 }
+
+void BoardSpace::updateDisplayChar() {
+    if (this->numAdjacentMines == 0) {
+        this->setDisplayChar('.');
+    }
+    else {
+        char newChar = this->numAdjacentMines + '0';
+        this->setDisplayChar(newChar);
+    }
+}

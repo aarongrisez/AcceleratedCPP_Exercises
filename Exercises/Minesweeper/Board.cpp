@@ -23,13 +23,14 @@ Board::Board() {
 	this->spaces = spacesVec;
 }
 
-Board::Board(int rows, int cols, int mines) {
+Board::Board(int& rows, int& cols, int& mines) {
 	this->rows = rows;
 	this->cols = cols;
-	this->numMines = mines;
 	this->numSpaces = this->rows * this->cols;
+	this->numMines = mines;
     this->isGameComplete = false;
-	vector<BoardSpace> spacesVec;
+    BoardSpace blank = BoardSpace();
+	vector<BoardSpace> spacesVec(this->rows * this->cols, blank);
 	this->spaces = spacesVec;
 }
 
@@ -54,26 +55,37 @@ vector<bool> Board::setMines() {
 void Board::setUpBoard() {
 	vector<bool> mines = this->setMines();
 	bool isCurrentSpaceMine = false;
+    int coord;
 	
 	for (int r = 0; r < this->rows; r++) {
 		// Set Up Row
 		for (int c = 0; c < this->cols; c++) {
 			// Set Up Column
-            isCurrentSpaceMine = mines[r * this->cols + c];
+            coord = this->convertCoords(r, c);
+            isCurrentSpaceMine = mines[coord];
             if (isCurrentSpaceMine) {
-			    this->spaces[r * this->cols + c].setMine();
+			    this->spaces[coord].setMine();
             }
 		}
 	}
+    char displayChar;
+    for (int r = 0; r < this->rows; r++) {
+        for (int c = 0; c < this->cols; c++) {
+            coord = this->convertCoords(r, c);
+            displayChar = (char)this->countAdjacentMines(r,c);
+            this->spaces[coord].setDisplayChar(displayChar);
+        }
+    }
 }
 
 void Board::displayBoard() {
+    int coord;
 	for (int r = 0; r < this->rows; r++) {
         std::cout << " ";
 		for (int c = 0; c < this->cols; c++) {
-				std::cout << this->spaces[r * this->cols + c].getDisplayChar() << " ";
+                coord = this->convertCoords(r, c);
+				std::cout << this->spaces[coord].getDisplayChar() << " ";
 		}
-		std::cout << std::endl;
 		std::cout << std::endl;
 	}
 }
@@ -88,34 +100,76 @@ void Board::displayAllMines() {
 
 int Board::checkSpace(int row, int col, bool safe) {
 	int randNum = rand() % 100000;
-    bool outOfBounds = (col > this->cols || col < 0 || row > this->rows || row < 0); 
-    char thisChar = this->spaces[row * this->cols + col].getDisplayChar();
-    if (this->spaces[row * this->cols + col].checkIfMine() && not safe) {
-        std::cout << "Game Over" << endl;
-        this->displayAllMines();
-        this->isGameComplete = true;
-        return 0;
-    }
-    else if (this->spaces[row * this->cols + col].checkIfMine() && safe) {
-        return 0; 
-    }
-    else if (thisChar == '.') {
-        return 0;
-    }
-    else if (outOfBounds) {
-        return 0;
-    }
-    // Random probability that flood fill succeeds
-    else if (safe && randNum < 38000) {
+    // Converted Coord
+    // Takes Pair and converts from tuple to row major
+    // If -1, out of bounds
+    int coord = this->convertCoords(row, col);
+
+    // Access space
+    if (coord == -1) {
+        cout << "Oops! You selected a spot that is out of bounds; please try again." << endl;
         return 0;
     }
     else {
-        this->spaces[row * this->cols + col].setDisplayChar('.');
-        // Check All Neighbors
-        this->checkSpace(row, col + 1, true);
-        this->checkSpace(row, col - 1, true);
-        this->checkSpace(row + 1, col, true);
-        this->checkSpace(row - 1, col, true);
+
+        char thisChar = this->spaces[coord].getDisplayChar();
+
+        // Check space
+        if (this->spaces[coord].checkIfMine() && not safe) {
+            std::cout << "Game Over" << endl;
+            this->displayAllMines();
+            this->isGameComplete = true;
+            return 0;
+        }
+        else if (this->spaces[coord].checkIfMine() && safe) {
+            return 1; 
+        }
+        else if (not this->spaces[coord].checkIfMine() && safe) {
+            return 0;
+        }
+        else if (thisChar != 'O') {
+            return 0;
+        }
+        // Random probability that flood fill fails
+        else if (safe && randNum < 40000) {
+            this->spaces[coord].updateDisplayChar();
+            return 0;
+        }
+        else {
+            this->spaces[coord].updateDisplayChar();
+            // Check All Neighbors
+            this->checkSpace(row, col + 1, true);
+            this->checkSpace(row, col - 1, true);
+            this->checkSpace(row + 1, col, true);
+            this->checkSpace(row - 1, col, true);
+        }
+        return 0;
+
     }
-    return 0;
+}
+
+int Board::countAdjacentMines(int row, int col) {
+    int count = 0;
+    int coord = this->convertCoords(row, col);
+    if (coord != -1) {
+        count += this->checkSpace(row, col + 1, true);
+        count += this->checkSpace(row + 1, col + 1, true);
+        count += this->checkSpace(row, col - 1, true);
+        count += this->checkSpace(row + 1, col - 1, true);
+        count += this->checkSpace(row + 1, col, true);
+        count += this->checkSpace(row + 1, col + 1, true);
+        count += this->checkSpace(row - 1, col, true);
+        count += this->checkSpace(row - 1, col + 1, true);
+    }
+    return count;
+}
+
+int Board::convertCoords(int row, int col) {
+    bool outOfBounds = (col > this->cols || col < 0 || row > this->rows || row < 0); 
+    if (not outOfBounds) {
+        return row * this->cols + col;
+    }
+    else {
+        return -1;
+    }
 }

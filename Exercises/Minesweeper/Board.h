@@ -7,7 +7,7 @@
 class Board {
 		public:
 				Board();
-				Board(int rows, int cols, int mines);
+				Board(int& rows, int& cols, int& mines);
 				void setUpBoard();
                 bool isGameComplete;
 				void updateBoard(int row, int col);
@@ -19,10 +19,12 @@ class Board {
 				char* cstring;
 				Board(const char* s, std::size_t n);
 				std::vector<BoardSpace> spaces;
+                int countAdjacentMines(int row, int col);
 				int rows;
 				int cols;
 				int numMines;
 				int numSpaces;
+                int convertCoords(int row, int col);
 				std::vector<bool> setMines(); // true => isMine
 };
 

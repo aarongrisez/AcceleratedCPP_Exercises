@@ -16,11 +16,10 @@ int main() {
 	cout << "Enter a numeric string" << endl;
 	cin.getline(y, 120);
 	BigInt* largeInteger2 = new BigInt(y);
-	*largeInteger += largeInteger2;
+	*largeInteger -= largeInteger2;
 	for (vector<int>::const_iterator it = largeInteger->integerVector.begin(); it < largeInteger->integerVector.end(); ++it) {
 		cout << *it;
 	}
 	cout << endl;
-	cout << largeInteger->integerRepresentation();
 	return 0;
 }

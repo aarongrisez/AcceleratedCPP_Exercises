@@ -8,7 +8,17 @@ using namespace std;
 int main() {
 	cout << "Welcome to Minesweeper" << endl;
 
-	Board x;
+    int numCols;
+    int numRows;
+    int numMines;
+
+    cout << "Choose number of columns" << endl;
+    cin >> numCols;
+    cout << "Choose number of rows" << endl;
+    cin >> numRows;
+    cout << "Choose number of mines" << endl;
+    cin >> numMines;
+	Board x(numRows, numCols, numMines);
 	x.setUpBoard();
     cout << "Board Set up" << endl;
 	x.displayBoard();
